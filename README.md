@@ -5,9 +5,12 @@ An interpreter that lets you read WhatsApp chatlog conversations in a nice, well
 Introduction: In WhatsApp, you can export a chat of yours into a .txt file, with this program, you'll be able to visualize the file in a nice interface. <br/>
 In this repository, you also have a .txt example file that you will be able to use to see exactly how the interpreter works.
 
+# New feature
+-Line break bug fixed <br/>
+
 # Future features
--Dark Mode option <br/>
--Line break bug fix <br/>
+-Light Mode option <br/>
+-Cleaner code when rendering messages <br/>
 
 # Acknowledgements
 -Thanks to the Codemyhobby YouTube channel for letting me use a part of his WhatsApp chatbox CSS code into my project, it was incredibly helpful. </br>

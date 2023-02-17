@@ -40,9 +40,8 @@ function iniciar_renderizado()
 {
 	while(seguirciclo == true)
 	{
-		console.log(iterador);
+		//console.log(iterador);
 		let args = lineas[iterador].split(" "); //aqui separo los argumentos de las lineas
-		//console.log(args[0]); //solo constato que funciona
 		let fechamensaje = args[0]; //fecha
 		let horamensaje = args[1]; //hora
 		let horariomensaje = args[2]; //si la hora es AM o PM
@@ -51,11 +50,9 @@ function iniciar_renderizado()
 
 
 		var encontrarusuario1 = 4; //es para empezar a partir de un argumento, está hecho variable para poder sumarse y restarse
-		//console.log("USUARIO 1");	
 
 		while(nombreusuario1encontrado == false) //se ejecuta dependiendo de si el nombre de usuario1 ya se encontró o no
 		{
-			//console.log(args[encontrarusuario1].substring(0, args[encontrarusuario1].length));
 			if(args[encontrarusuario1].substring(args[encontrarusuario1].length - 1) == ":") //comprueba que si a partir del 4 argumento (donde empieza el nombre de usuario) hay un ":", lo cual indicaría que ahí termina el nombre de usuario1
 			{
 				nombreusuario1encontrado = true; //declara que ya encontró el nombre de usuario1
@@ -75,58 +72,92 @@ function iniciar_renderizado()
 
 		var encontrarusuario2 = 4; //es para empezar a partir de un argumento, está hecho variable para poder sumarse y restarse
 
-		//console.log("PRUEBA"); //consolea "PRUEBA" para separar
-		//console.log(args[encontrarusuario2]); //consolea la primera palabra del nombre de usuario
-
-		//console.log(nombreusuario1); //consolea el nombre del usuario 1
-		console.log(args[encontrarusuario2]);
-		if(args[encontrarusuario2] != nombreusuario1.substring(0, args[encontrarusuario2].length)) //si el nombre de usuario2 es diferente al nombre del usuario 1, este codigo se ejecuta
+		//console.log(args[encontrarusuario2]);
+		if(args[encontrarusuario2] != undefined)
 		{
-			//console.log("USUARIO 2"); //consolea para separar
-			while(nombreusuario2encontrado == false) //se ejecuta dependiendo de si el nombre de usuario2 ya se encontró o no
+			if(args[encontrarusuario2] != nombreusuario1.substring(0, args[encontrarusuario2].length)) //si el nombre de usuario2 es diferente al nombre del usuario 1, este codigo se ejecuta
 			{
-				if(args[encontrarusuario2].substring(args[encontrarusuario2].length - 1) == ":") //comprueba que si a partir del 4 argumento (donde empieza el nombre de usuario) hay un ":", lo cual indicaría que ahí termina el nombre de usuario2
+				//console.log("USUARIO 2"); //consolea para separar
+				while(nombreusuario2encontrado == false) //se ejecuta dependiendo de si el nombre de usuario2 ya se encontró o no
 				{
-					nombreusuario2encontrado = true; //declara que ya encontró el nombre de usuario2
-					nombreusuario2 += args[encontrarusuario2]; //añade las palabras al nombre de usuario2
-					botonusuario2.innerText = nombreusuario2.substring(0, nombreusuario2.length - 1);
-					//console.log(nombreusuario2); //consolea el nombre
-					//console.log("Con substr " + nombreusuario2.substring(0, nombreusuario2.length-2)); //consolea el nombre sin el ":" final
+					if(args[encontrarusuario2].substring(args[encontrarusuario2].length - 1) == ":") //comprueba que si a partir del 4 argumento (donde empieza el nombre de usuario) hay un ":", lo cual indicaría que ahí termina el nombre de usuario2
+					{
+						nombreusuario2encontrado = true; //declara que ya encontró el nombre de usuario2
+						nombreusuario2 += args[encontrarusuario2]; //añade las palabras al nombre de usuario2
+						botonusuario2.innerText = nombreusuario2.substring(0, nombreusuario2.length - 1);
+						//console.log(nombreusuario2); //consolea el nombre
+						//console.log("Con substr " + nombreusuario2.substring(0, nombreusuario2.length-2)); //consolea el nombre sin el ":" final
+					}
+					else
+					{
+						nombreusuario2 += args[encontrarusuario2] + " "; //añade las palabras el nombre de usuario2 más un espacio al final
+						//console.log(nombreusuario2); //consolea el nombre del usuario2
+					}
+					encontrarusuario2++; //añade un iterador a la variable para avanzar una palabra si es que la palabra verificada no termina en un ":"
 				}
-				else
-				{
-					nombreusuario2 += args[encontrarusuario2] + " "; //añade las palabras el nombre de usuario2 más un espacio al final
-					//console.log(nombreusuario2); //consolea el nombre del usuario2
-				}
-				encontrarusuario2++; //añade un iterador a la variable para avanzar una palabra si es que la palabra verificada no termina en un ":"
 			}
 		}
 
 
 		//RENDERIZANDO MENSAJES
-		if(args[4].substring(0, 3) == nombreusuario1.substring(0, 3))
+		if(args[4] != undefined) //si la siguiente linea es una sola palabra de un mensaje anterior por un salto de linea, no se ejecuta nada de esto y se va a la siguiente línea
 		{
-			contenidomensaje = lineas[iterador].substring((args[0].length + 1 + args[1].length + 1 + args[2].length + 1 + args[3].length + 1 + nombreusuario1.length + 1), lineas[iterador].length)
-			var mensaje_nuevo = new Mensaje(contenidomensaje, horamensaje, horariomensaje, fechamensaje, usuariomensaje);
-			//console.log(contenidomensaje);
-			crear_div_mensaje(mensaje_nuevo.contenido, mensaje_nuevo.hora, mensaje_nuevo.horario, mensaje_nuevo.fecha, mensaje_nuevo.usuario);
-
-			if(lineas[iterador] == lineas.length-1)
+			if(args[4].substring(0, 3) == nombreusuario1.substring(0, 3))
 			{
-				seguirciclo=false;
+				contenidomensaje = lineas[iterador].substring((args[0].length + 1 + args[1].length + 1 + args[2].length + 1 + args[3].length + 1 + nombreusuario1.length + 1), lineas[iterador].length)
+
+				//comprobar si la siguiente línea es una continuación en salto de línea
+				var argsprueba;
+				try
+				{
+					argsprueba = lineas[iterador + 1].split(" ");
+				} catch (error)
+				{
+					console.log("Error esperado, ya no hay siguiente línea (todo bien)");
+				}
+				if(((argsprueba[2] != "a. m.") && (argsprueba[2] != "p. m.")) && lineas[iterador + 1] != undefined)
+				{
+					contenidomensaje += " " + lineas[iterador + 1];
+				}
+
+				//se crea el div del mensaje nuevo como tal
+				var mensaje_nuevo = new Mensaje(contenidomensaje, horamensaje, horariomensaje, fechamensaje, usuariomensaje);
+				//console.log(contenidomensaje);
+				crear_div_mensaje(mensaje_nuevo.contenido, mensaje_nuevo.hora, mensaje_nuevo.horario, mensaje_nuevo.fecha, mensaje_nuevo.usuario);
+
+				if(lineas[iterador] == lineas.length-1)
+				{
+					seguirciclo=false;
+				}
+
 			}
-		}
-		else if(args[4].substring(0, 3) == nombreusuario2.substring(0, 3))
-		{
-			contenidomensaje = lineas[iterador].substring((args[0].length + 1 + args[1].length + 1 + args[2].length + 1 + args[3].length + 1 + nombreusuario2.length), lineas[iterador].length)
-			usuariomensaje = true;
-			var mensaje_nuevo = new Mensaje(contenidomensaje, horamensaje, horariomensaje, fechamensaje, usuariomensaje);
-			//console.log(contenidomensaje);			
-			crear_div_mensaje(mensaje_nuevo.contenido, mensaje_nuevo.hora, mensaje_nuevo.horario, mensaje_nuevo.fecha, mensaje_nuevo.usuario);
-
-			if(lineas[iterador] == lineas.length-1)
+			else if(args[4].substring(0, 3) == nombreusuario2.substring(0, 3))
 			{
-				seguirciclo = false;
+				contenidomensaje = lineas[iterador].substring((args[0].length + 1 + args[1].length + 1 + args[2].length + 1 + args[3].length + 1 + nombreusuario2.length), lineas[iterador].length)
+
+				//comprobar si la siguiente línea es una continuación en salto de línea
+				var argsprueba;
+				try
+				{
+					argsprueba = lineas[iterador + 1].split(" ");
+				} catch (error)
+				{
+					console.log("Error esperado, ya no hay siguiente línea (todo bien)");
+				}
+				if(((argsprueba[2] != "a. m.") && (argsprueba[2] != "p. m.")) && lineas[iterador + 1] != undefined)
+				{
+					contenidomensaje += " " + lineas[iterador + 1];
+				}
+
+				usuariomensaje = true;
+				var mensaje_nuevo = new Mensaje(contenidomensaje, horamensaje, horariomensaje, fechamensaje, usuariomensaje);
+				//console.log(contenidomensaje);			
+				crear_div_mensaje(mensaje_nuevo.contenido, mensaje_nuevo.hora, mensaje_nuevo.horario, mensaje_nuevo.fecha, mensaje_nuevo.usuario);
+
+				if(lineas[iterador] == lineas.length-1)
+				{
+					seguirciclo = false;
+				}
 			}
 		}
 
@@ -137,7 +168,7 @@ function iniciar_renderizado()
 			seguirciclo = false;
 		}
 	}
-}
+}	
 
 
 //FUNCION PARA CREAR LOS DIVS QUE CONTIENEN LOS MENSAJES
@@ -160,7 +191,7 @@ function crear_div_mensaje(contenido, hora, horario, fecha, usuario)
 		estructura_mensaje.classList.add("my_msg");
 	}
 
-	horamensaje.appendChild(document.createTextNode(hora));
+	horamensaje.appendChild(document.createTextNode(hora + " " + horario));
 	mensajito.appendChild(document.createTextNode(contenido));
 	estructura_mensaje.appendChild(mensajito);
 	mensajito.appendChild(horamensaje);
